@@ -38,7 +38,7 @@
 			<DelphiCompile Include="TheBestEditor.dpr">
 				<MainSource>MainSource</MainSource>
 			</DelphiCompile>
-			<DCCReference Include="Principal.pas">
+			<DCCReference Include="ufrmEditorXSLT.pas">
 				<Form>frmEditorXSLT</Form>
 			</DCCReference>
 			<DCCReference Include="ufrmDialogConfirmReplace.pas">
@@ -50,6 +50,7 @@
 			<DCCReference Include="ufrmDialogReplaceText.pas">
 				<Form>frmDialogReplace</Form>
 			</DCCReference>
+			<DCCReference Include="uSearchHighlighter.pas"/>
 			<BuildConfiguration Include="Base">
 				<Key>Base</Key>
 			</BuildConfiguration>

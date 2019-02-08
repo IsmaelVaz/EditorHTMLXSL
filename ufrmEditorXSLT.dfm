@@ -1,0 +1,349 @@
+object frmEditorXSLT: TfrmEditorXSLT
+  Left = 0
+  Top = 0
+  Caption = 'Editor XSLT'
+  ClientHeight = 406
+  ClientWidth = 992
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  Menu = mainMenu
+  OldCreateOrder = False
+  WindowState = wsMaximized
+  OnActivate = FormActivate
+  OnCreate = FormCreate
+  PixelsPerInch = 96
+  TextHeight = 13
+  object pageGeral: TPageControl
+    Left = 0
+    Top = 0
+    Width = 992
+    Height = 368
+    ActivePage = tabPageRend
+    Align = alClient
+    TabOrder = 0
+    OnChange = pageGeralChange
+    object tabPageEditor: TTabSheet
+      Caption = 'Editor'
+      object Splitter: TSplitter
+        Left = 150
+        Top = 0
+        Width = 5
+        Height = 340
+        Color = clBtnFace
+        ParentColor = False
+        ExplicitTop = -182
+        ExplicitHeight = 525
+      end
+      object edtMiniMap: TSynEdit
+        Left = 0
+        Top = 0
+        Width = 150
+        Height = 340
+        Align = alLeft
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -3
+        Font.Name = 'Courier New'
+        Font.Style = []
+        TabOrder = 1
+        OnMouseUp = edtMiniMapMouseUp
+        BorderStyle = bsNone
+        Gutter.Font.Charset = DEFAULT_CHARSET
+        Gutter.Font.Color = clWindowText
+        Gutter.Font.Height = -11
+        Gutter.Font.Name = 'Courier New'
+        Gutter.Font.Style = []
+        Gutter.LeftOffset = 0
+        Gutter.Visible = False
+        Gutter.Width = 0
+        Highlighter = synHTMLSyn
+        Lines.Strings = (
+          'edtMiniMap')
+        Options = [eoAltSetsColumnMode, eoAutoIndent, eoDragDropEditing, eoEnhanceEndKey, eoGroupUndo, eoNoCaret, eoNoSelection, eoScrollPastEol, eoShowScrollHint, eoSmartTabDelete, eoSmartTabs, eoTabsToSpaces]
+        ReadOnly = True
+        ScrollBars = ssNone
+        TabWidth = 2
+        WordWrapGlyph.Visible = False
+        OnSpecialLineColors = edtMiniMapSpecialLineColors
+        FontSmoothing = fsmNone
+      end
+      object edtCodigo: TSynEdit
+        Left = 155
+        Top = 0
+        Width = 829
+        Height = 340
+        Align = alClient
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -13
+        Font.Name = 'Courier New'
+        Font.Style = []
+        TabOrder = 0
+        OnMouseDown = edtCodigoMouseDown
+        BorderStyle = bsNone
+        Gutter.Font.Charset = DEFAULT_CHARSET
+        Gutter.Font.Color = clWindowText
+        Gutter.Font.Height = -11
+        Gutter.Font.Name = 'Courier New'
+        Gutter.Font.Style = []
+        Gutter.ShowLineNumbers = True
+        Highlighter = synHTMLSyn
+        Options = [eoAutoIndent, eoDragDropEditing, eoEnhanceEndKey, eoScrollPastEof, eoShowScrollHint, eoTabIndent, eoTabsToSpaces, eoTrimTrailingSpaces]
+        WantTabs = True
+        OnReplaceText = edtCodigoReplaceText
+        OnSpecialLineColors = edtCodigoSpecialLineColors
+        OnStatusChange = edtCodigoStatusChange
+        FontSmoothing = fsmNone
+        RemovedKeystrokes = <
+          item
+            Command = ecDeleteLine
+            ShortCut = 16473
+          end>
+        AddedKeystrokes = <
+          item
+            Command = ecRedo
+            ShortCut = 16473
+          end>
+      end
+    end
+    object tabPageEstruturaXML: TTabSheet
+      Caption = 'Estrutura XML'
+      ImageIndex = 2
+      object edtEstruturaXML: TSynEdit
+        Left = 0
+        Top = 0
+        Width = 984
+        Height = 340
+        Align = alClient
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -13
+        Font.Name = 'Courier New'
+        Font.Style = []
+        TabOrder = 0
+        OnMouseDown = edtCodigoMouseDown
+        BorderStyle = bsNone
+        Gutter.Font.Charset = DEFAULT_CHARSET
+        Gutter.Font.Color = clWindowText
+        Gutter.Font.Height = -11
+        Gutter.Font.Name = 'Courier New'
+        Gutter.Font.Style = []
+        Gutter.ShowLineNumbers = True
+        Highlighter = synXMLSyn
+        Options = [eoAutoIndent, eoHalfPageScroll, eoShowScrollHint, eoTabIndent, eoTabsToSpaces, eoTrimTrailingSpaces]
+        WantTabs = True
+        OnReplaceText = edtCodigoReplaceText
+        OnSpecialLineColors = edtEstruturaXMLSpecialLineColors
+        OnStatusChange = edtCodigoStatusChange
+        FontSmoothing = fsmNone
+        RemovedKeystrokes = <
+          item
+            Command = ecDeleteLine
+            ShortCut = 16473
+          end>
+        AddedKeystrokes = <
+          item
+            Command = ecRedo
+            ShortCut = 16473
+          end>
+      end
+    end
+    object tabPagePreRend: TTabSheet
+      Caption = 'Pr'#233' Renderizado'
+      ImageIndex = 3
+    end
+    object tabPageRend: TTabSheet
+      Caption = 'Renderizado'
+      ImageIndex = 1
+    end
+  end
+  object pnlBottom: TPanel
+    Left = 0
+    Top = 368
+    Width = 992
+    Height = 38
+    Align = alBottom
+    BevelOuter = bvNone
+    TabOrder = 1
+    object pnlButtons: TPanel
+      Left = 800
+      Top = 0
+      Width = 192
+      Height = 38
+      Align = alRight
+      BevelOuter = bvNone
+      TabOrder = 0
+      object cmdOk: TBitBtn
+        Left = 16
+        Top = 8
+        Width = 81
+        Height = 25
+        Caption = '&OK'
+        DoubleBuffered = True
+        Glyph.Data = {
+          36030000424D3603000000000000360000002800000010000000100000000100
+          18000000000000030000120B0000120B00000000000000000000FF00FFFF00FF
+          FF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00
+          FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF
+          00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FF
+          FF00FFFF00FFFF00FF006600006600FF00FFFF00FFFF00FFFF00FFFF00FFFF00
+          FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FF0066001EB2311FB13300
+          6600FF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FF
+          FF00FF00660031C24F22B7381AB02D21B437006600FF00FFFF00FFFF00FFFF00
+          FFFF00FFFF00FFFF00FFFF00FFFF00FF00660047D36D3BCB5E25A83B0066001B
+          A92E1DB132006600FF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FF006600
+          4FD67953DE7F31B54D006600FF00FF006600179D271EAE31006600FF00FFFF00
+          FFFF00FFFF00FFFF00FFFF00FFFF00FF00660041C563006600FF00FFFF00FFFF
+          00FFFF00FF00660019AA2B006600FF00FFFF00FFFF00FFFF00FFFF00FFFF00FF
+          FF00FF006600FF00FFFF00FFFF00FFFF00FFFF00FFFF00FF006600149D210066
+          00FF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF
+          00FFFF00FFFF00FFFF00FFFF00FF006600006600FF00FFFF00FFFF00FFFF00FF
+          FF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00
+          FF006600006600FF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF
+          00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FF
+          FF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00
+          FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF
+          00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FF
+          FF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00
+          FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF
+          00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FFFF00FF}
+        ParentDoubleBuffered = False
+        TabOrder = 0
+        OnClick = cmdOkClick
+      end
+      object cmdCancel: TBitBtn
+        Left = 104
+        Top = 8
+        Width = 81
+        Height = 25
+        Cancel = True
+        Caption = '&Cancelar'
+        DoubleBuffered = True
+        Glyph.Data = {
+          36030000424D3603000000000000360000002800000010000000100000000100
+          1800000000000003000000000000000000000000000000000000C8D0D4C8D0D4
+          C8D0D4C8D0D4C8D0D4B4BCBF8C91947377796F73757A7E819CA2A5C3CBCFC8D0
+          D4C8D0D4C8D0D4C8D0D4C8D0D4C8D0D4C8D0D4C6CED272768723246504046200
+          006500006000004F1112394D5052A6ADB0C8D0D4C8D0D4C8D0D4C8D0D4C8D0D4
+          BFC7CB4C4F8100008400008E00008E00008F00008C000088000081010154292A
+          34989EA1C8D0D4C8D0D4C8D0D4C6CED2484A8B00009600009700009B00009F00
+          00A000009D00009700008F0000880000622A2C36A8AFB2C8D0D4C8D0D47075A0
+          0101A308089E9999D46868D00000AC0000AE0000A94848B8B7B7E32727A50000
+          8C010152595C5EC8D0D4ADB4CB2122A60000AB2828A3DEDED2FEFEFF6464D400
+          00B34646C0E7E7ECFFFFF75E5EB700009A02028724273EC8D0D4777BCD0707B1
+          0303B90000C24C4CA7E6E6D9FCFCFF9E9EE6E8E9F4FFFFF17575B90606B10101
+          AB0202A00F115AC8D0D4474AC30808BB0707C80505D10000C85353B6F2F2EDFF
+          FFFFFFFFFC7575C90000BE0101C30303B80303AC0D0E6DC8D0D43D3FC80C0CC9
+          0D0DD80B0BDC0000D63C3DCEEEEFEDFFFFFFFFFFFD5858DB0000CA0303CB0606
+          C50606B80F0F77C8D0D45B5ED41414D81717EA0B0BF14343DBE4E4EAFDFDF5BA
+          BAD4EAEAE8FEFEFF6363E50303D70A0ACF0A0AC31B1C7AC8D0D4949AD82324E3
+          2222FB3F3FE9DCDCE5FDFDEE7373C50303D75151B0E3E3D6FFFFFE6161E50808
+          DB0F0FCA3F4279C8D0D4BFC6D54D4FE53232FF5252EDB3B3C27777CA0000EA00
+          00EC0000E85252B4ADADB04D4DE11818ED1616AF8F949BC8D0D4C8D0D4A9B0D9
+          393AF75353FF6868EF5757F93838FF2525FD2929FF3838FC4242EB3232FF1F1F
+          E9636793C8D0D4C8D0D4C8D0D4C8D0D4999FDC4444F96E6EFF9191FF9393FF84
+          84FF7676FF6767FF5151FF3131FB6266A0C7CFD3C8D0D4C8D0D4C8D0D4C8D0D4
+          C8D0D4ADB4D95C5FF06767FC8787FF9292FF7676FF5353FF4749EB8388B3C8D0
+          D4C8D0D4C8D0D4C8D0D4C8D0D4C8D0D4C8D0D4C8D0D4BFC6D6979CDE7275EA71
+          73F36C6FEC878CE3B1B9D3C8D0D4C8D0D4C8D0D4C8D0D4C8D0D4}
+        ParentDoubleBuffered = False
+        TabOrder = 1
+        OnClick = cmdCancelClick
+      end
+    end
+  end
+  object synHTMLSyn: TSynHTMLSyn
+    Options.AutoDetectEnabled = False
+    Options.AutoDetectLineLimit = 0
+    Options.Visible = False
+    CommentAttri.Foreground = clWindowFrame
+    IdentifierAttri.Foreground = clMaroon
+    SpaceAttri.Foreground = clGradientInactiveCaption
+    Left = 320
+    Top = 360
+  end
+  object completionProposal: TSynCompletionProposal
+    EndOfTokenChr = '()[]. '
+    TriggerChars = '.'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = 'MS Sans Serif'
+    Font.Style = []
+    TitleFont.Charset = DEFAULT_CHARSET
+    TitleFont.Color = clBtnText
+    TitleFont.Height = -11
+    TitleFont.Name = 'MS Sans Serif'
+    TitleFont.Style = [fsBold]
+    Columns = <>
+    ShortCut = 16416
+    Editor = edtCodigo
+    Left = 152
+    Top = 360
+  end
+  object autoComplete: TSynAutoComplete
+    EndOfTokenChr = '()[]. '
+    ShortCut = 8224
+    Options = []
+    Left = 512
+    Top = 360
+  end
+  object mainMenu: TMainMenu
+    Left = 440
+    Top = 136
+    object File1: TMenuItem
+      Caption = 'File'
+      object CarregarNovoTemplate: TMenuItem
+        Caption = 'Carregar Novo Template'
+        OnClick = CarregarNovoTemplateClick
+      end
+      object CarregarNovoXML: TMenuItem
+        Caption = 'Carregar Novo XML'
+        OnClick = CarregarNovoXMLClick
+      end
+    end
+    object Editar1: TMenuItem
+      Caption = 'Editar'
+      object Localizar1: TMenuItem
+        Caption = 'Localizar'
+        ShortCut = 16454
+        OnClick = Localizar1Click
+      end
+      object LocalizarPrximo1: TMenuItem
+        Caption = 'Localizar Pr'#243'ximo'
+        ShortCut = 117
+        OnClick = LocalizarPrximo1Click
+      end
+      object LocalizarAnterior1: TMenuItem
+        Caption = 'Localizar Anterior'
+        ShortCut = 116
+        OnClick = LocalizarAnterior1Click
+      end
+      object Substituir1: TMenuItem
+        Caption = 'Substituir'
+        ShortCut = 16456
+        OnClick = Substituir1Click
+      end
+    end
+  end
+  object synEditSearch: TSynEditSearch
+    Left = 260
+    Top = 80
+  end
+  object synEditRegexSearch: TSynEditRegexSearch
+    Left = 260
+    Top = 152
+  end
+  object synXMLSyn: TSynXMLSyn
+    Options.AutoDetectEnabled = False
+    Options.AutoDetectLineLimit = 0
+    Options.Visible = False
+    WantBracesParsed = False
+    Left = 592
+    Top = 360
+  end
+end

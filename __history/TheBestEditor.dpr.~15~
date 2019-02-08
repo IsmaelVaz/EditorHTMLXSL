@@ -5,8 +5,7 @@ uses
   ufrmEditorXSLT in 'ufrmEditorXSLT.pas' {frmEditorXSLT},
   ufrmDialogConfirmReplace in 'ufrmDialogConfirmReplace.pas' {frmDialogConfirmReplace},
   ufrmDialogSearchText in 'ufrmDialogSearchText.pas' {frmDialogTextSearch},
-  ufrmDialogReplaceText in 'ufrmDialogReplaceText.pas' {frmDialogReplace},
-  uSearchHighlighter in 'uSearchHighlighter.pas';
+  ufrmDialogReplaceText in 'ufrmDialogReplaceText.pas' {frmDialogReplace};
 
 {$R *.res}
 

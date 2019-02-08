@@ -32,6 +32,9 @@
     <Transaction>2019/02/08 16:10:55.808.dfm,C:\Work\Testes\TheBestEditor\ufrmDialogReplaceText.dfm=C:\Work\Testes\TheBestEditor\dlgReplaceText.dfm</Transaction>
     <Transaction>2019/02/08 16:11:20.691.pas,C:\Work\Testes\TheBestEditor\dlgReplaceText.pas=C:\Work\Testes\TheBestEditor\ufrmDialogReplaceText.pas</Transaction>
     <Transaction>2019/02/08 16:11:20.691.dfm,C:\Work\Testes\TheBestEditor\dlgReplaceText.dfm=C:\Work\Testes\TheBestEditor\ufrmDialogReplaceText.dfm</Transaction>
+    <Transaction>2019/02/08 16:31:30.178.pas,C:\Work\Testes\TheBestEditor\Principal.pas=C:\Work\Testes\TheBestEditor\ufrmEditorXSLT.pas</Transaction>
+    <Transaction>2019/02/08 16:31:30.178.dfm,C:\Work\Testes\TheBestEditor\Principal.dfm=C:\Work\Testes\TheBestEditor\ufrmEditorXSLT.dfm</Transaction>
+    <Transaction>2019/02/08 16:32:40.011.pas,C:\Work\Testes\TheBestEditor\plgSearchHighlighter.pas=C:\Work\Testes\TheBestEditor\uSearchHighlighter.pas</Transaction>
   </Transactions>
 	<ProjectSortOrder AutoSort="0" SortType="0">
     <File Path="ufrmDialogConfirmReplace.pas"/>
@@ -40,7 +43,8 @@
     <File Path="ufrmDialogReplaceText.dfm"/>
     <File Path="ufrmDialogSearchText.pas"/>
     <File Path="ufrmDialogSearchText.dfm"/>
-    <File Path="Principal.pas"/>
-    <File Path="Principal.dfm"/>
+    <File Path="ufrmEditorXSLT.pas"/>
+    <File Path="ufrmEditorXSLT.dfm"/>
+    <File Path="uSearchHighlighter.pas"/>
   </ProjectSortOrder>
 </BorlandProject>

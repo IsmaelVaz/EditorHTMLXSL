@@ -1,4 +1,4 @@
-unit Principal;
+unit ufrmEditorXSLT;
 
 interface
 
@@ -134,6 +134,8 @@ begin
    xmlSubstituteEntitiesDefault(1);
 
    FXMLLoaded := TXMLDocument.Create(nil);
+   FXMLLoaded.Version:='1.0';
+   FXMLLoaded.Encoding:='iso-8859-1';
    FTemplateLoaded := TStringList.Create;
 
 
@@ -273,10 +275,13 @@ begin
       'XML|*.xml|All Files|*.*';
    try
       if openDialogXML.Execute = True then begin
+
          FXMLLoaded.FileName:= openDialogXML.FileName;
+
          try
             try
                FXMLLoaded.Active:= True;
+               FXMLLoaded.Encoding:='iso-8859-1';
                if FXMLLoaded.IsEmptyDoc then begin
                   Application.MessageBox(PCHAR('Este XML está vázio!'+#13#10+'Selecione outro.'), 'Aviso', MB_ICONWARNING+MB_OK);
                end else begin
@@ -337,7 +342,7 @@ begin
       end;
    finally
        if FileExists(CaminhoCompleto) = True then begin
-            DeleteFile(CaminhoCompleto);
+            //DeleteFile(CaminhoCompleto);
        end;
    end;
 end;
