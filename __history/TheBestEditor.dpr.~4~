@@ -1,0 +1,20 @@
+program TheBestEditor;
+
+uses
+  Forms,
+  Principal in 'Principal.pas' {Form2},
+  dlgConfirmReplace in 'dlgConfirmReplace.pas' {ConfirmReplaceDialog},
+  dlgSearchText in 'dlgSearchText.pas' {TextSearchDialog},
+  plgSearchHighlighter in 'plgSearchHighlighter.pas',
+  dlgReplaceText in 'dlgReplaceText.pas' {TextReplaceDialog},
+  uSimpleIDEDebugger in 'uSimpleIDEDebugger.pas';
+
+{$R *.res}
+
+begin
+  Application.Initialize;
+  Application.MainFormOnTaskbar := True;
+  Application.CreateForm(TfrmEditorXSLT, frmEditorXSLT);
+  Application.CreateForm(TConfirmReplaceDialog, ConfirmReplaceDialog);
+  Application.Run;
+end.

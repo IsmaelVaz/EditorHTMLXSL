@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>2019/02/04 17:12:13.360.pas,C:\Users\P2S\Documents\RAD Studio\Projects\Unit2.pas=C:\work\Testes\TheBestEditor\Principal.pas</Transaction>
+    <Transaction>2019/02/04 17:12:13.360.dfm,C:\Users\P2S\Documents\RAD Studio\Projects\Unit2.dfm=C:\work\Testes\TheBestEditor\Principal.dfm</Transaction>
+    <Transaction>2019/02/04 17:18:46.752.dproj,C:\Users\P2S\Documents\RAD Studio\Projects\Project2.dproj=C:\Work\Testes\TheBestEditor\TheBestEditor.dproj</Transaction>
+    <Transaction>2019/02/06 11:31:02.332.pas,C:\Work\Testes\TheBestEditor\dlgReplaceText.pas=</Transaction>
+    <Transaction>2019/02/06 11:31:02.332.dfm,C:\Work\Testes\TheBestEditor\dlgReplaceText.dfm=</Transaction>
+    <Transaction>2019/02/07 11:44:57.806.pas,C:\Work\Testes\TheBestEditor\uSimpleIDEDebugger.pas=</Transaction>
+    <Transaction>2019/02/07 11:45:12.886.pas,C:\Work\Testes\TheBestEditor\plgSearchHighlighter.pas=</Transaction>
+  </Transactions>
+	<ProjectSortOrder AutoSort="0" SortType="0">
+    <File Path="dlgConfirmReplace.pas"/>
+    <File Path="dlgConfirmReplace.dfm"/>
+    <File Path="dlgReplaceText.pas"/>
+    <File Path="dlgReplaceText.dfm"/>
+    <File Path="dlgSearchText.pas"/>
+    <File Path="dlgSearchText.dfm"/>
+    <File Path="Principal.pas"/>
+    <File Path="Principal.dfm"/>
+  </ProjectSortOrder>
+</BorlandProject>

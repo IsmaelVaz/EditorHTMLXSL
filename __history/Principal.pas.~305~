@@ -1,0 +1,708 @@
+unit Principal;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,Math, Dialogs,
+  SynEdit, ExtCtrls, SynHighlighterHtml, SynEditSearch, ComCtrls, SynCompletionProposal,
+  StdCtrls, Buttons, Menus, SynEditRegexSearch, DIXml, SynEditHighlighter, SynEditMiscClasses, OleCtrls, SHDocVw, SynHighlighterXML, xmldom, XMLIntf, msxmldom,
+  XMLDoc;
+
+type
+  TfrmEditorXSLT = class(TForm)
+    Splitter: TSplitter;
+    edtMiniMap: TSynEdit;
+    synHTMLSyn: TSynHTMLSyn;
+    edtCodigo: TSynEdit;
+    pageGeral: TPageControl;
+    tabPageEditor: TTabSheet;
+    completionProposal: TSynCompletionProposal;
+    tabPageRend: TTabSheet;
+    autoComplete: TSynAutoComplete;
+    pnlBottom: TPanel;
+    pnlButtons: TPanel;
+    cmdOk: TBitBtn;
+    cmdCancel: TBitBtn;
+    mainMenu: TMainMenu;
+    Editar1: TMenuItem;
+    Localizar1: TMenuItem;
+    Substituir1: TMenuItem;
+    synEditSearch: TSynEditSearch;
+    synEditRegexSearch: TSynEditRegexSearch;
+    LocalizarPrximo1: TMenuItem;
+    LocalizarAnterior1: TMenuItem;
+    tabPageEstruturaXML: TTabSheet;
+    tabPagePreRend: TTabSheet;
+    File1: TMenuItem;
+    CarregarNovoXML: TMenuItem;
+    edtEstruturaXML: TSynEdit;
+    synXMLSyn: TSynXMLSyn;
+    CarregarNovoTemplate: TMenuItem;
+    procedure FormCreate(Sender: TObject);
+    procedure edtMiniMapMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+    procedure edtMiniMapSpecialLineColors(Sender: TObject; Line: Integer; var Special: Boolean; var FG, BG: TColor);
+    procedure edtCodigoStatusChange(Sender: TObject; Changes: TSynStatusChanges);
+    procedure cmdOkClick(Sender: TObject);
+    procedure cmdCancelClick(Sender: TObject);
+    procedure Localizar1Click(Sender: TObject);
+    procedure Substituir1Click(Sender: TObject);
+    procedure edtCodigoReplaceText(Sender: TObject; const ASearch, AReplace: string; Line, Column: Integer; var Action: TSynReplaceAction);
+    procedure LocalizarPrximo1Click(Sender: TObject);
+    procedure LocalizarAnterior1Click(Sender: TObject);
+    procedure edtCodigoSpecialLineColors(Sender: TObject; Line: Integer; var Special: Boolean; var FG, BG: TColor);
+    procedure edtCodigoMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+    procedure pageGeralChange(Sender: TObject);
+    procedure FormActivate(Sender: TObject);
+    procedure CarregarNovoXMLClick(Sender: TObject);
+    procedure CarregarNovoTemplateClick(Sender: TObject);
+    procedure edtEstruturaXMLSpecialLineColors(Sender: TObject; Line: Integer; var Special: Boolean; var FG, BG: TColor);
+  protected
+    FError: Boolean;
+    FLineError, FTabActiveError: Integer;
+    FMessageError: String;
+    FSearchFromCaret: Boolean;
+    FDocTree: xmlDocPtr;
+    FXMLLoaded: TXMLDocument;
+    FTemplateLoaded: TStrings;
+    procedure AddCompletionProposal(var Completion: TSynCompletionProposal);
+    procedure InicializarEditor;
+    procedure DoSearchReplaceText(AReplace: boolean; ABackwards: boolean; AEdtTabSel: TSynEdit);
+    procedure ShowSearchReplaceDialog(AReplace: boolean; AEdtTabSel: TSynEdit);
+    function ValidadorEstruturaHTMLXSL(AEditTabSel: TSynEdit):Boolean;
+    function ParsePushParser(const AFileName: WideString; const AOptions: Integer = 0): xmlDocPtr;
+    procedure UpdateScreen;
+  public
+    //[Alterar] Alterar quando passar para o Primestart
+    function Open(ATexto: TStrings):Boolean;
+  end;
+
+var
+  frmEditorXSLT: TfrmEditorXSLT;
+
+implementation
+
+{$R *.dfm}
+uses
+  dlgSearchText, dlgReplaceText, dlgConfirmReplace, plgSearchHighlighter,
+  SynEditTypes, SynEditMiscProcs;
+
+  // options - to be saved to the registry
+var
+  gbSearchBackwards: Boolean;
+  gbSearchCaseSensitive: Boolean;
+  gbSearchFromCaret: Boolean;
+  gbSearchSelectionOnly: Boolean;
+  gbSearchTextAtCaret: Boolean;
+  gbSearchWholeWords: Boolean;
+  gbSearchRegex: Boolean;
+  gsSearchText: string;
+  gsSearchTextHistory: string;
+  gsReplaceText: string;
+  gsReplaceTextHistory: string;
+
+//Chamado automaticamente quando é detectado um erro no XML
+procedure OnError(UserData: Pointer; Error: xmlErrorPtr);
+var
+   MessageRetorn: String;
+begin
+   frmEditorXSLT.FLineError:= Error^.Line;
+   frmEditorXSLT.FError:= True;
+   MessageRetorn:= Error^.Message;
+   if Assigned(Error^.Str1) then MessageRetorn:=MessageRetorn+Error^.Str1;
+   if Assigned(Error^.Str2) then MessageRetorn:=MessageRetorn+#13#10+Error^.Str2;
+   if Assigned(Error^.Str3) then MessageRetorn:=MessageRetorn+#13#10+Error^.Str3;
+   frmEditorXSLT.FMessageError:= MessageRetorn;
+end;
+
+procedure TfrmEditorXSLT.FormCreate(Sender: TObject);
+begin
+   //double buffer both SynEdit instances
+   edtMiniMap.DoubleBuffered := True;
+   edtCodigo.DoubleBuffered := True;
+
+   edtMiniMap.SetLinesPointer(edtCodigo);
+   AddCompletionProposal(completionProposal);
+
+   FError:= False;
+   FLineError:= -1;
+   FTabActiveError:= -1;
+   FMessageError:= '';
+
+   xmlInitParser;
+   xmlLineNumbersDefault(1); // Activate line numbers storage for xmlGetLineNo().
+   xmlSetStructuredErrorFunc(nil, OnError);
+   xmlSubstituteEntitiesDefault(1);
+
+   FXMLLoaded := TXMLDocument.Create(nil);
+   FTemplateLoaded := TStringList.Create;
+
+
+   //[Alterar] Tirar quando passar para o Primestart
+   //Acrescentar PrintOrientation
+   Open(FTemplateLoaded);
+end;
+
+procedure TfrmEditorXSLT.FormActivate(Sender: TObject);
+begin
+   //edtCodigo.SetFocus;
+
+end;
+
+function TfrmEditorXSLT.Open(ATexto: TStrings):Boolean;
+begin
+
+   //[Alterar]
+   pageGeral.ActivePageIndex:= 0;
+   if ATexto.Text = '' then begin
+      InicializarEditor;
+   end else begin
+      edtCodigo.ClearAll;
+      edtCodigo.Lines.Assign(ATexto);
+   end;
+
+
+   //Implementar quando passar para o Primestart
+   //if ShowModal = mrOk then begin
+
+   //end else begin
+
+   //end;
+
+   Result:= False;
+end;
+
+//Controla a mudança de aba e é responsavel por chamar o validar quando a aba
+//Rederizador for selecionada e caso tenha algum erro, retorna o foco para a aba Editor
+procedure TfrmEditorXSLT.pageGeralChange(Sender: TObject);
+begin
+   //Selecionar Tab Pré-Renderizado
+   if pageGeral.TabIndex = 2 then begin
+      if ValidadorEstruturaHTMLXSL(edtCodigo) then begin
+         ShowMessage('Código ta Show: Aba Pré-Renderizado');
+      end else begin
+         Application.MessageBox(PCHAR('Não foi possível renderizar o código: Há um erro na linha '
+            +IntToStr(FLineError)
+            +#13#10#13#10
+            +FMessageError), 'Aviso', MB_ICONWARNING+MB_OK);
+
+         FTabActiveError:= 0;
+         pageGeral.TabIndex:= 0;
+         tabPageEditor.Show;
+         edtCodigo.SetFocus;
+         edtCodigo.SelStart:= 0;
+         edtCodigo.CaretY:=FLineError;
+      end;
+   end;
+
+   //Selecionar Tab Renderizado
+   if pageGeral.TabIndex = 3 then begin
+      if ValidadorEstruturaHTMLXSL(edtCodigo) then begin
+         if ValidadorEstruturaHTMLXSL(edtEstruturaXML) then begin
+            ShowMessage('Código e XML ta Show: Aba Renderizado');
+         end else begin
+            Application.MessageBox(PCHAR('Não foi possível renderizar o código: Há um erro no XML na linha '
+               +IntToStr(FLineError)
+               +#13#10#13#10
+               +FMessageError), 'Aviso', MB_ICONWARNING+MB_OK);
+
+            FTabActiveError:= 1;
+            pageGeral.TabIndex:= 1;
+            tabPageEstruturaXML.Show;
+            edtEstruturaXML.SetFocus;
+            edtEstruturaXML.SelStart:= 0;
+            edtEstruturaXML.CaretY:=FLineError;
+         end;
+      end else begin
+         Application.MessageBox(PCHAR('Não foi possível renderizar o código: Há um erro na linha '
+            +IntToStr(FLineError)
+            +#13#10#13#10
+            +FMessageError), 'Aviso', MB_ICONWARNING+MB_OK);
+
+         FTabActiveError:= 0;
+         pageGeral.TabIndex:= 0;
+         tabPageEditor.Show;
+         edtCodigo.SetFocus;
+         edtCodigo.SelStart:= 0;
+         edtCodigo.CaretY:=FLineError;
+      end;
+   end;
+end;
+
+//Carrega um novo código de template diretamente da máquina
+//para evitar Copiar e Colar de bloco de nota
+procedure TfrmEditorXSLT.CarregarNovoTemplateClick(Sender: TObject);
+var
+   openDialogTemplate: TOpenDialog;
+begin
+   openDialogTemplate:= TOpenDialog.Create(Self);
+   openDialogTemplate.Filter:=
+      'TXT|*.txt|HTML|*.html|All Files|*.*';
+   try
+      if openDialogTemplate.Execute = True then begin
+         FTemplateLoaded.LoadFromFile(openDialogTemplate.FileName);
+
+         edtCodigo.Lines:= FTemplateLoaded;
+
+         FTabActiveError:=0;
+         pageGeral.TabIndex:= 0;
+         tabPageEditor.Show;
+         edtCodigo.SetFocus;
+
+         if ValidadorEstruturaHTMLXSL(edtCodigo) = False then begin
+            Application.MessageBox(PCHAR('Há um erro na estrutura HTML na linha '
+               +IntToStr(FLineError)
+               +#13#10#13#10
+               +FMessageError), 'Aviso', MB_ICONWARNING+MB_OK);
+
+            edtCodigo.SelStart:= 0;
+            edtCodigo.CaretY:=FLineError;
+         end;
+      end;
+   finally
+      openDialogTemplate.Free;
+   end;
+end;
+
+//Carrega um novo XML para ser usado na rederização do HTML com XSL.
+procedure TfrmEditorXSLT.CarregarNovoXMLClick(Sender: TObject);
+var
+   openDialogXML: TOpenDialog;
+begin
+   openDialogXML:= TOpenDialog.Create(Self);
+   openDialogXML.Filter:=
+      'XML|*.xml|All Files|*.*';
+   try
+      if openDialogXML.Execute = True then begin
+         FXMLLoaded.FileName:= openDialogXML.FileName;
+         try
+            try
+               FXMLLoaded.Active:= True;
+               if FXMLLoaded.IsEmptyDoc then begin
+                  Application.MessageBox(PCHAR('Este XML está vázio!'+#13#10+'Selecione outro.'), 'Aviso', MB_ICONWARNING+MB_OK);
+               end else begin
+                  edtEstruturaXML.Lines := (FXMLLoaded.XML);
+                  pageGeral.TabIndex:= 1;
+                  tabPageEstruturaXML.Show;
+                  edtEstruturaXML.SetFocus;
+                  edtEstruturaXML.SelStart:= 0;
+               end;
+            except
+               on E : Exception do begin
+                  Application.MessageBox(PCHAR('Este não é um XML válido!'+#13#10+E.Message), 'Aviso', MB_ICONWARNING+MB_OK);
+               end;
+            end;
+         finally
+            FXMLLoaded.Active:= False;
+         end;
+      end;
+   finally
+      openDialogXML.Free;
+   end;
+end;
+
+//Valida a estrutura do HTML em forma de XML, ou seja, verifica se as Tags estão
+//sendo fechadas corretamente
+function TfrmEditorXSLT.ValidadorEstruturaHTMLXSL(AEditTabSel: TSynEdit):Boolean;
+var
+   Options: Integer;
+   CaminhoPadrao, CaminhoCompleto: String;
+begin
+   try
+      CaminhoPadrao:='C:\Users\Public\Documents\TempTemplatePrime\';
+
+      if DirectoryExists(CaminhoPadrao) = False then begin
+         CreateDir(CaminhoPadrao);
+      end;
+
+      //[Alterar] Alterar nome do arquivo quando passar para o Primestart
+      CaminhoCompleto:=CaminhoPadrao+'NomeDoc.xsl';
+      AEditTabSel.Lines.SaveToFile(CaminhoCompleto);
+
+      FError := False;
+      FLineError := -1;
+      FMessageError:= '';
+      xmlFreeDoc(FDocTree);
+      FDocTree:= nil;
+      Options := 0;
+
+      Options := Options or XML_PARSE_NOBLANKS;
+      FDocTree := ParsePushParser(CaminhoCompleto, Options);
+
+      if FError = True then begin
+         Result:= False;
+      end else begin
+         //[Alterar] Chamar metodo RenderizarTemplate
+         //ShowMessage('Ta de boa');
+         Result:= True;
+      end;
+   finally
+       if FileExists(CaminhoCompleto) = True then begin
+            DeleteFile(CaminhoCompleto);
+       end;
+   end;
+end;
+
+//Atualiza os componentes da tela com as informações do Objeto
+procedure TfrmEditorXSLT.UpdateScreen;
+begin
+   //[Alterar] Implementar no Primestart
+end;
+
+//Ao clicar em qualquer lugar do código, irá sumir o destaque em vermelho
+procedure TfrmEditorXSLT.edtCodigoMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+begin
+   if FError = True then
+   begin
+      //Retirado pois imposibilita o CTRL+Z ou CTRL+Y
+      //edtMiniMap.Text:= edtMiniMap.Text;
+      FLineError:= -1;
+      FError:= False;
+      FMessageError:='';
+   end;
+end;
+
+//Responsável por inserir uma cor diferente no Editor do XML caso tenha algum erro
+//processado pela aba renderizador
+procedure TfrmEditorXSLT.edtEstruturaXMLSpecialLineColors(Sender: TObject; Line: Integer; var Special: Boolean; var FG, BG: TColor);
+begin
+   if FError = True and (FTabActiveError = 1) then begin
+      if Line = FLineError then
+      begin
+         Special := TRUE;
+         FG := clWhite;
+         BG := clRed;
+      end;
+   end;
+end;
+
+//Responsável por inserir uma cor diferente no Editor caso tenha algum erro
+//processado pela aba renderizador
+procedure TfrmEditorXSLT.edtCodigoSpecialLineColors(Sender: TObject; Line: Integer; var Special: Boolean; var FG, BG: TColor);
+begin
+   if FError = True and (FTabActiveError = 0) then begin
+      if Line = FLineError then
+      begin
+         Special := TRUE;
+         FG := clWhite;
+         BG := clRed;
+      end;
+   end;
+end;
+
+//Responsável por inserir uma cor diferente no Mini Map,
+//para mostrar onde o código do editor está posicionado
+procedure TfrmEditorXSLT.edtMiniMapSpecialLineColors(Sender: TObject; Line: Integer; var Special: Boolean; var FG, BG: TColor);
+begin
+   Special := (Cardinal(Line - edtCodigo.TopLine) <= Cardinal(edtCodigo.LinesInWindow));
+   if Special = True then
+      BG := clBtnFace;
+
+  if FError = True and (FTabActiveError = 0) then begin
+      if Line = FLineError then
+      begin
+         Special := TRUE;
+         //FG := clWhite;
+         BG := clRed;
+      end;
+   end;
+end;
+
+// Incrementa o método TfrmEditorXSLT.edtMiniMapSpecialLineColors
+// para colorir o Mini Map
+procedure TfrmEditorXSLT.edtCodigoStatusChange(Sender: TObject; Changes: TSynStatusChanges);
+begin
+   if edtMiniMap.Tag = edtCodigo.TopLine then
+    Exit;
+  edtMiniMap.Tag := edtCodigo.TopLine;
+  edtMiniMap.TopLine :=
+    Max(1, edtCodigo.TopLine - (edtMiniMap.LinesInWindow -
+    edtCodigo.LinesInWindow) div 2);
+  edtMiniMap.Invalidate;
+end;
+
+//Ao clicar no Mini Map, é localizado o ponto onde foi clicado
+//e rola o editor até esse ponto
+procedure TfrmEditorXSLT.edtMiniMapMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+var
+  Coord: TDisplayCoord;
+begin
+  Coord := edtMiniMap.PixelsToNearestRowColumn(X, Y);
+  edtCodigo.CaretXY := edtCodigo.DisplayToBufferPos(Coord);
+  edtCodigo.Invalidate;
+  edtCodigo.TopLine := Max(1, Coord.Row - (edtCodigo.LinesInWindow div 2));
+end;
+
+//Aparece a caixa de dialogo para dar o Replace um por um, em todos ou cancelar
+procedure TfrmEditorXSLT.edtCodigoReplaceText(Sender: TObject; const ASearch, AReplace: string; Line, Column: Integer; var Action: TSynReplaceAction);
+var
+  APos: TPoint;
+  EditRect: TRect;
+begin
+  if ASearch = AReplace then
+    Action := raSkip
+  else begin
+    APos := edtCodigo.ClientToScreen(
+      edtCodigo.RowColumnToPixels(
+      edtCodigo.BufferToDisplayPos(
+        BufferCoord(Column, Line) ) ) );
+    EditRect := ClientRect;
+    EditRect.TopLeft := ClientToScreen(EditRect.TopLeft);
+    EditRect.BottomRight := ClientToScreen(EditRect.BottomRight);
+
+    if ConfirmReplaceDialog = nil then
+      ConfirmReplaceDialog := TConfirmReplaceDialog.Create(Application);
+    ConfirmReplaceDialog.PrepareShow(EditRect, APos.X, APos.Y,
+      APos.Y + edtCodigo.LineHeight, ASearch);
+    case ConfirmReplaceDialog.ShowModal of
+      mrYes: Action := raReplace;
+      mrYesToAll: Action := raReplaceAll;
+      mrNo: Action := raSkip;
+      else Action := raCancel;
+    end;
+  end;
+end;
+
+//Responsavel por procura a palavra que será substituida
+procedure TfrmEditorXSLT.DoSearchReplaceText(AReplace: Boolean;
+  ABackwards: Boolean; AEdtTabSel: TSynEdit);
+var
+  Options: TSynSearchOptions;
+begin
+  if AReplace then
+    Options := [ssoPrompt, ssoReplace, ssoReplaceAll]
+  else
+    Options := [];
+  if ABackwards then
+    Include(Options, ssoBackwards);
+  if gbSearchCaseSensitive then
+    Include(Options, ssoMatchCase);
+  if not FSearchFromCaret then
+    Include(Options, ssoEntireScope);
+  if gbSearchSelectionOnly then
+    Include(Options, ssoSelectedOnly);
+  if gbSearchWholeWords then
+    Include(Options, ssoWholeWord);
+  if gbSearchRegex then
+    AEdtTabSel.SearchEngine := SynEditRegexSearch
+  else
+    AEdtTabSel.SearchEngine := SynEditSearch;
+  if AEdtTabSel.SearchReplace(gsSearchText, gsReplaceText, Options) = 0 then
+  begin
+    MessageBeep(MB_ICONASTERISK);
+    if ssoBackwards in Options then
+      AEdtTabSel.BlockEnd := edtCodigo.BlockBegin
+    else
+      AEdtTabSel.BlockBegin := AEdtTabSel.BlockEnd;
+    AEdtTabSel.CaretXY := AEdtTabSel.BlockBegin;
+  end;
+
+  if ConfirmReplaceDialog <> nil then
+    ConfirmReplaceDialog.Free;
+end;
+
+//Responsável por verificar se é um Search ou um Replace e chamar seu
+//respectivo Form e ação
+procedure TfrmEditorXSLT.ShowSearchReplaceDialog(AReplace: Boolean; AEdtTabSel: TSynEdit);
+var
+  dlg: TTextSearchDialog;
+begin
+  if AReplace then
+    dlg := TTextReplaceDialog.Create(Self)
+  else
+    dlg := TTextSearchDialog.Create(Self);
+  with dlg do try
+    // assign search options
+    SearchBackwards := gbSearchBackwards;
+    SearchCaseSensitive := gbSearchCaseSensitive;
+    SearchFromCursor := gbSearchFromCaret;
+    SearchInSelectionOnly := gbSearchSelectionOnly;
+    // start with last search text
+    SearchText := gsSearchText;
+    if gbSearchTextAtCaret then begin
+      // if something is selected search for that text
+      if AEdtTabSel.SelAvail and (AEdtTabSel.BlockBegin.Line = AEdtTabSel.BlockEnd.Line)
+      then
+        SearchText := AEdtTabSel.SelText
+      else
+        SearchText := AEdtTabSel.GetWordAtRowCol(AEdtTabSel.CaretXY);
+    end;
+    SearchTextHistory := gsSearchTextHistory;
+    if AReplace then with dlg as TTextReplaceDialog do begin
+      ReplaceText := gsReplaceText;
+      ReplaceTextHistory := gsReplaceTextHistory;
+    end;
+    SearchWholeWords := gbSearchWholeWords;
+    if ShowModal = mrOK then begin
+      gbSearchBackwards := SearchBackwards;
+      gbSearchCaseSensitive := SearchCaseSensitive;
+      gbSearchFromCaret := SearchFromCursor;
+      gbSearchSelectionOnly := SearchInSelectionOnly;
+      gbSearchWholeWords := SearchWholeWords;
+      gbSearchRegex := SearchRegularExpression;
+      gsSearchText := SearchText;
+      gsSearchTextHistory := SearchTextHistory;
+      if AReplace then with dlg as TTextReplaceDialog do begin
+        gsReplaceText := ReplaceText;
+        gsReplaceTextHistory := ReplaceTextHistory;
+      end;
+      FSearchFromCaret := gbSearchFromCaret;
+      if gsSearchText <> '' then begin
+        DoSearchReplaceText(AReplace, gbSearchBackwards, AEdtTabSel);
+        FSearchFromCaret := TRUE;
+      end;
+    end;
+  finally
+    dlg.Free;
+  end;
+end;
+
+procedure TfrmEditorXSLT.Substituir1Click(Sender: TObject);
+begin
+   if pageGeral.ActivePageIndex = 0 then
+      ShowSearchReplaceDialog(True, edtCodigo);
+
+   if pageGeral.ActivePageIndex = 1 then
+      ShowSearchReplaceDialog(True, edtEstruturaXML);
+end;
+
+procedure TfrmEditorXSLT.Localizar1Click(Sender: TObject);
+begin
+   if pageGeral.ActivePageIndex = 0 then
+      ShowSearchReplaceDialog(FALSE, edtCodigo);
+
+   if pageGeral.ActivePageIndex = 1 then
+      ShowSearchReplaceDialog(FALSE, edtEstruturaXML);
+end;
+
+procedure TfrmEditorXSLT.LocalizarAnterior1Click(Sender: TObject);
+begin
+
+   if pageGeral.ActivePageIndex = 0 then
+      DoSearchReplaceText(FALSE, TRUE, edtCodigo);
+
+   if pageGeral.ActivePageIndex = 1 then
+      DoSearchReplaceText(FALSE, TRUE, edtEstruturaXML);
+end;
+
+procedure TfrmEditorXSLT.LocalizarPrximo1Click(Sender: TObject);
+begin
+   if pageGeral.ActivePageIndex = 0 then
+      DoSearchReplaceText(FALSE, FALSE, edtCodigo);
+
+   if pageGeral.ActivePageIndex = 1 then
+      DoSearchReplaceText(FALSE, FALSE, edtEstruturaXML);
+end;
+
+procedure TfrmEditorXSLT.cmdCancelClick(Sender: TObject);
+begin
+   ModalResult:= mrCancel;
+end;
+
+procedure TfrmEditorXSLT.cmdOkClick(Sender: TObject);
+begin
+   ModalResult:= mrOk;
+end;
+
+//Inicializa o editor com a estrutura básica do Template
+//Esse método será chamado somente quando for um novo template.
+procedure TfrmEditorXSLT.InicializarEditor;
+begin
+   edtCodigo.ClearAll;
+   edtCodigo.Text:=
+   '<?xml version="1.0" encoding="iso-8859-1"?>'
+   +#13#10
+   +'<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">'
+   +#13#10
+   +'<xsl:template match="/Objeto">'
+   +#13#10
+   +'<html>'
+   +#13#10
+   +'<body>'
+   +#13#10#13#10
+   +'</body>'
+   +#13#10
+   +'</html>'
+   +#13#10
+   +'</xsl:template>'
+   +#13#10
+   +'</xsl:stylesheet>';
+end;
+
+// Para não usar um arquivo externo para criar o Auto Completar
+// Adicionamos diretamente nessa funcção
+procedure TfrmEditorXSLT.AddCompletionProposal(var Completion: TSynCompletionProposal);
+begin
+   completionProposal.ItemList.Clear;
+   Completion.ItemList.Add('<table style="border-collapse:collapse;"></table>');
+   Completion.ItemList.Add('<tr></tr>');
+   Completion.ItemList.Add('<td></td>');
+   Completion.ItemList.Add('<div style="page-break-after: always;"/>');
+   Completion.ItemList.Add('format-number(#Campo#,'+Chr(39)+'#.##0,00'+Chr(39)+','+Chr(39)+'european'+Chr(39)+')');
+   Completion.ItemList.Add('<xsl:value-of select=""/>');
+   Completion.ItemList.Add('<xsl:for-each select=""></xsl:for-each>');
+   Completion.ItemList.Add('<xsl:if test=""></xsl:if>');
+   Completion.ItemList.Add('<xsl:key name="" match="" use=""/>');
+   Completion.ItemList.Add('generate-id() = generate-id(key('+Chr(39)+'#NomeKey#'+Chr(39)+', #Use#)[1])');
+   Completion.ItemList.Add('<xsl:decimal-format name="european" decimal-separator='+Chr(39)+','+Chr(39)+' grouping-separator='+Chr(39)+'.'+Chr(39)+' />');
+   Completion.ItemList.Add('sum(#Campo#)');
+   Completion.ItemList.Add('not(#Campo#)');
+   Completion.ItemList.Add('substring(#Campo#, #PosInicial#, #QtdLetrasDepois#)');
+   Completion.ItemList.Add('substring-before(#Campo#, #Char#)');
+   Completion.ItemList.Add('substring-after(#Campo#, #Char#)');
+   Completion.ItemList.Add('contains(#Campo#, #Char#)');
+   Completion.ItemList.Add('translate(#Campo#, #Char#, #Char#)');
+end;
+
+//Metodo para validar o Codigo XML
+function XmlParsePushParser(const AStream: TStream; const AFileName: WideString; const AOptions: Integer = 0): xmlDocPtr;
+var
+  i: Integer;
+  Buf: array[0..$0FFF] of AnsiChar;
+  ParserContext: xmlParserCtxtPtr;
+begin
+  Result := nil;
+  if Assigned(AStream) then
+    begin
+      i := AStream.Read(Buf, SizeOf(Buf));
+      if i > 0 then
+        begin
+          { Initialize the parser ... }
+          ParserContext := xmlCreatePushParserCtxt(nil, nil, Buf, i, PAnsiChar(Utf8Encode(AFileName)));
+          if Assigned(ParserContext) then
+            try
+              xmlCtxtUseOptions(ParserContext, AOptions);
+              { ... read new data ... }
+              i := AStream.Read(Buf, SizeOf(Buf));
+              while i > 0 do
+                begin
+                  { ... continue parsing ... }
+                  xmlParseChunk(ParserContext, Buf, i, 0);
+                  i := AStream.Read(Buf, SizeOf(Buf));
+                end;
+              { ... and finally terminate. }
+              xmlParseChunk(ParserContext, Buf, 0, 1);
+              Result := ParserContext.myDoc;
+            finally
+              xmlFreeParserCtxt(ParserContext);
+            end;
+        end;
+    end;
+end;
+
+//Transforma o arquivo em um Stream para o Metodo XmlParsePushParser
+//conseguir processar e validar a estrutura XML
+function TfrmEditorXSLT.ParsePushParser(const AFileName: WideString; const AOptions: Integer = 0): xmlDocPtr;
+var
+  s: TStream;
+begin
+
+  s := TFileStream.Create(AFileName, fmOpenRead or fmShareDenyWrite);
+  try
+    { Choose the XML or HTML push parser based on user settings. }
+      Result := XmlParsePushParser(s, AFileName, AOptions);
+  finally
+    s.Free;
+  end;
+end;
+
+end.
