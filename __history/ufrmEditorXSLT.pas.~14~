@@ -133,7 +133,8 @@ begin
    xmlSetStructuredErrorFunc(nil, OnError);
    xmlSubstituteEntitiesDefault(1);
 
-   FXMLLoaded := TXMLDocument.Create(nil);
+   FXMLLoaded := TXMLDocument.Create(Self);
+
    FTemplateLoaded := TStringList.Create;
 
 
@@ -278,17 +279,22 @@ begin
 
          try
             try
-               FXMLLoaded.Active:= True;
-               FXMLLoaded.Encoding:='iso-8859-1';
-               if FXMLLoaded.IsEmptyDoc then begin
-                  Application.MessageBox(PCHAR('Este XML está vázio!'+#13#10+'Selecione outro.'), 'Aviso', MB_ICONWARNING+MB_OK);
-               end else begin
-                  edtEstruturaXML.Lines := (FXMLLoaded.XML);
-                  pageGeral.TabIndex:= 1;
-                  tabPageEstruturaXML.Show;
-                  edtEstruturaXML.SetFocus;
-                  edtEstruturaXML.SelStart:= 0;
+               with FXMLLoaded do begin
+                  Active:= True;
+                  Version:='1.0';
+                  Encoding:='UTF-16';
                end;
+
+               //Por conta de um bug do Delphi 2010, não é possível configurar o xml corretamente
+               //em iso-8859-1, portanto, é preciso fazer a alterar abaixo.
+               FXMLLoaded.XML.Text:=stringreplace(FXMLLoaded.XML.Text, 'UTF-16','iso-8859-1',[rfReplaceAll, rfIgnoreCase]);
+
+               edtEstruturaXML.Lines := (FXMLLoaded.XML);
+               pageGeral.TabIndex:= 1;
+               tabPageEstruturaXML.Show;
+               edtEstruturaXML.SetFocus;
+               edtEstruturaXML.SelStart:= 0;
+
             except
                on E : Exception do begin
                   Application.MessageBox(PCHAR('Este não é um XML válido!'+#13#10+E.Message), 'Aviso', MB_ICONWARNING+MB_OK);

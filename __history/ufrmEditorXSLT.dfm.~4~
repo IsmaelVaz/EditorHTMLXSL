@@ -28,10 +28,6 @@ object frmEditorXSLT: TfrmEditorXSLT
     OnChange = pageGeralChange
     object tabPageEditor: TTabSheet
       Caption = 'Editor'
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Splitter: TSplitter
         Left = 150
         Top = 0
@@ -117,10 +113,6 @@ object frmEditorXSLT: TfrmEditorXSLT
     object tabPageEstruturaXML: TTabSheet
       Caption = 'Estrutura XML'
       ImageIndex = 2
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object edtEstruturaXML: TSynEdit
         Left = 0
         Top = 0
@@ -163,10 +155,6 @@ object frmEditorXSLT: TfrmEditorXSLT
     object tabPagePreRend: TTabSheet
       Caption = 'Pr'#233' Renderizado'
       ImageIndex = 3
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
     end
     object tabPageRend: TTabSheet
       Caption = 'Renderizado'
