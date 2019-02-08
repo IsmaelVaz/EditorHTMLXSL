@@ -5,8 +5,8 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,Math, Dialogs,
   SynEdit, ExtCtrls, SynHighlighterHtml, SynEditSearch, ComCtrls, SynCompletionProposal,
-  StdCtrls, Buttons, Menus, SynEditRegexSearch, DIXml, SynEditHighlighter, SynEditMiscClasses, OleCtrls, SHDocVw, SynHighlighterXML, xmldom, XMLIntf, msxmldom,
-  XMLDoc;
+  StdCtrls, Buttons, Menus, SynEditRegexSearch, DIXml, SynEditHighlighter, SynEditMiscClasses,
+  OleCtrls, SHDocVw, SynHighlighterXML, xmldom, XMLIntf, msxmldom, XMLDoc;
 
 type
   TfrmEditorXSLT = class(TForm)
@@ -83,7 +83,7 @@ implementation
 
 {$R *.dfm}
 uses
-  dlgSearchText, dlgReplaceText, dlgConfirmReplace, plgSearchHighlighter,
+  ufrmDialogSearchText, ufrmDialogReplaceText, ufrmDialogConfirmReplace, plgSearchHighlighter,
   SynEditTypes, SynEditMiscProcs;
 
   // options - to be saved to the registry
@@ -167,6 +167,8 @@ begin
    //end else begin
 
    //end;
+
+   Result:= False;
 end;
 
 //Controla a mudança de aba e é responsavel por chamar o validar quando a aba
@@ -234,13 +236,14 @@ var
 begin
    openDialogTemplate:= TOpenDialog.Create(Self);
    openDialogTemplate.Filter:=
-      'HTML|*.html|TXT|*.txt';
+      'TXT|*.txt|HTML|*.html|All Files|*.*';
    try
       if openDialogTemplate.Execute = True then begin
          FTemplateLoaded.LoadFromFile(openDialogTemplate.FileName);
 
          edtCodigo.Lines:= FTemplateLoaded;
 
+         FTabActiveError:=0;
          pageGeral.TabIndex:= 0;
          tabPageEditor.Show;
          edtCodigo.SetFocus;
@@ -487,7 +490,7 @@ begin
   begin
     MessageBeep(MB_ICONASTERISK);
     if ssoBackwards in Options then
-      AEdtTabSel.BlockEnd := edtCodigo.BlockBegin
+      AEdtTabSel.BlockEnd := AEdtTabSel.BlockBegin
     else
       AEdtTabSel.BlockBegin := AEdtTabSel.BlockEnd;
     AEdtTabSel.CaretXY := AEdtTabSel.BlockBegin;

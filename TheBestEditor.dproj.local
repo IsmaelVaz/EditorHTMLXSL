@@ -8,14 +8,38 @@
     <Transaction>2019/02/06 11:31:02.332.dfm,C:\Work\Testes\TheBestEditor\dlgReplaceText.dfm=</Transaction>
     <Transaction>2019/02/07 11:44:57.806.pas,C:\Work\Testes\TheBestEditor\uSimpleIDEDebugger.pas=</Transaction>
     <Transaction>2019/02/07 11:45:12.886.pas,C:\Work\Testes\TheBestEditor\plgSearchHighlighter.pas=</Transaction>
+    <Transaction>2019/02/08 15:42:12.036.pas,C:\Work\Testes\teste\EditorHTMLXSL\dlgReplaceText.pas=C:\Work\Testes\teste\EditorHTMLXSL\ufrmDialogReplaceText.pas</Transaction>
+    <Transaction>2019/02/08 15:42:12.036.dfm,C:\Work\Testes\teste\EditorHTMLXSL\dlgReplaceText.dfm=C:\Work\Testes\teste\EditorHTMLXSL\ufrmDialogReplaceText.dfm</Transaction>
+    <Transaction>2019/02/08 15:53:47.409.pas,C:\Work\Testes\teste\EditorHTMLXSL\ufrmDialogReplaceText.pas=C:\Work\Testes\teste\EditorHTMLXSL\dlgReplaceText.pas</Transaction>
+    <Transaction>2019/02/08 15:53:47.409.dfm,C:\Work\Testes\teste\EditorHTMLXSL\ufrmDialogReplaceText.dfm=C:\Work\Testes\teste\EditorHTMLXSL\dlgReplaceText.dfm</Transaction>
+    <Transaction>2019/02/08 16:07:09.600.pas,C:\Work\Testes\teste\EditorHTMLXSL\Unit1.pas=C:\Work\Testes\teste\EditorHTMLXSL\ufrmDialogReplaceText.pas</Transaction>
+    <Transaction>2019/02/08 16:07:09.600.dfm,C:\Work\Testes\teste\EditorHTMLXSL\Unit1.dfm=C:\Work\Testes\teste\EditorHTMLXSL\ufrmDialogReplaceText.dfm</Transaction>
+    <Transaction>2019/02/08 16:07:40.486.pas,C:\Work\Testes\teste\EditorHTMLXSL\ufrmDialogReplaceText.pas=</Transaction>
+    <Transaction>2019/02/08 16:07:40.486.dfm,C:\Work\Testes\teste\EditorHTMLXSL\ufrmDialogReplaceText.dfm=</Transaction>
+    <Transaction>2019/02/08 16:09:44.887.pas,C:\Work\Testes\TheBestEditor\dlgConfirmReplace.pas=C:\Work\Testes\TheBestEditor\ufrmConfirmReplace.pas</Transaction>
+    <Transaction>2019/02/08 16:09:44.887.dfm,C:\Work\Testes\TheBestEditor\dlgConfirmReplace.dfm=C:\Work\Testes\TheBestEditor\ufrmConfirmReplace.dfm</Transaction>
+    <Transaction>2019/02/08 16:09:54.706.pas,C:\Work\Testes\TheBestEditor\ufrmConfirmReplace.pas=C:\Work\Testes\TheBestEditor\ufrmDialogConfirmReplace.pas</Transaction>
+    <Transaction>2019/02/08 16:09:54.706.dfm,C:\Work\Testes\TheBestEditor\ufrmConfirmReplace.dfm=C:\Work\Testes\TheBestEditor\ufrmDialogConfirmReplace.dfm</Transaction>
+    <Transaction>2019/02/08 16:10:07.066.pas,C:\Work\Testes\TheBestEditor\dlgReplaceText.pas=C:\Work\Testes\TheBestEditor\ufrmDialogReplaceText.pas</Transaction>
+    <Transaction>2019/02/08 16:10:07.066.dfm,C:\Work\Testes\TheBestEditor\dlgReplaceText.dfm=C:\Work\Testes\TheBestEditor\ufrmDialogReplaceText.dfm</Transaction>
+    <Transaction>2019/02/08 16:10:07.075.pas,C:\Work\Testes\TheBestEditor\ufrmDialogReplaceText.pas=C:\Work\Testes\TheBestEditor\dlgReplaceText.pas</Transaction>
+    <Transaction>2019/02/08 16:10:07.075.dfm,C:\Work\Testes\TheBestEditor\ufrmDialogReplaceText.dfm=C:\Work\Testes\TheBestEditor\dlgReplaceText.dfm</Transaction>
+    <Transaction>2019/02/08 16:10:28.642.pas,C:\Work\Testes\TheBestEditor\dlgSearchText.pas=C:\Work\Testes\TheBestEditor\ufrmDialogSearchText.pas</Transaction>
+    <Transaction>2019/02/08 16:10:28.642.dfm,C:\Work\Testes\TheBestEditor\dlgSearchText.dfm=C:\Work\Testes\TheBestEditor\ufrmDialogSearchText.dfm</Transaction>
+    <Transaction>2019/02/08 16:10:55.799.pas,C:\Work\Testes\TheBestEditor\dlgReplaceText.pas=C:\Work\Testes\TheBestEditor\ufrmDialogReplaceText.pas</Transaction>
+    <Transaction>2019/02/08 16:10:55.799.dfm,C:\Work\Testes\TheBestEditor\dlgReplaceText.dfm=C:\Work\Testes\TheBestEditor\ufrmDialogReplaceText.dfm</Transaction>
+    <Transaction>2019/02/08 16:10:55.808.pas,C:\Work\Testes\TheBestEditor\ufrmDialogReplaceText.pas=C:\Work\Testes\TheBestEditor\dlgReplaceText.pas</Transaction>
+    <Transaction>2019/02/08 16:10:55.808.dfm,C:\Work\Testes\TheBestEditor\ufrmDialogReplaceText.dfm=C:\Work\Testes\TheBestEditor\dlgReplaceText.dfm</Transaction>
+    <Transaction>2019/02/08 16:11:20.691.pas,C:\Work\Testes\TheBestEditor\dlgReplaceText.pas=C:\Work\Testes\TheBestEditor\ufrmDialogReplaceText.pas</Transaction>
+    <Transaction>2019/02/08 16:11:20.691.dfm,C:\Work\Testes\TheBestEditor\dlgReplaceText.dfm=C:\Work\Testes\TheBestEditor\ufrmDialogReplaceText.dfm</Transaction>
   </Transactions>
 	<ProjectSortOrder AutoSort="0" SortType="0">
-    <File Path="dlgConfirmReplace.pas"/>
-    <File Path="dlgConfirmReplace.dfm"/>
-    <File Path="dlgReplaceText.pas"/>
-    <File Path="dlgReplaceText.dfm"/>
-    <File Path="dlgSearchText.pas"/>
-    <File Path="dlgSearchText.dfm"/>
+    <File Path="ufrmDialogConfirmReplace.pas"/>
+    <File Path="ufrmDialogConfirmReplace.dfm"/>
+    <File Path="ufrmDialogReplaceText.pas"/>
+    <File Path="ufrmDialogReplaceText.dfm"/>
+    <File Path="ufrmDialogSearchText.pas"/>
+    <File Path="ufrmDialogSearchText.dfm"/>
     <File Path="Principal.pas"/>
     <File Path="Principal.dfm"/>
   </ProjectSortOrder>

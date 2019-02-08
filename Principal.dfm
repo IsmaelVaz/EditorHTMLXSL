@@ -28,8 +28,10 @@ object frmEditorXSLT: TfrmEditorXSLT
     OnChange = pageGeralChange
     object tabPageEditor: TTabSheet
       Caption = 'Editor'
-      ExplicitWidth = 986
-      ExplicitHeight = 378
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object Splitter: TSplitter
         Left = 150
         Top = 0
@@ -72,7 +74,6 @@ object frmEditorXSLT: TfrmEditorXSLT
         WordWrapGlyph.Visible = False
         OnSpecialLineColors = edtMiniMapSpecialLineColors
         FontSmoothing = fsmNone
-        ExplicitHeight = 378
       end
       object edtCodigo: TSynEdit
         Left = 155
@@ -101,8 +102,6 @@ object frmEditorXSLT: TfrmEditorXSLT
         OnSpecialLineColors = edtCodigoSpecialLineColors
         OnStatusChange = edtCodigoStatusChange
         FontSmoothing = fsmNone
-        ExplicitWidth = 831
-        ExplicitHeight = 378
         RemovedKeystrokes = <
           item
             Command = ecDeleteLine
@@ -118,8 +117,6 @@ object frmEditorXSLT: TfrmEditorXSLT
     object tabPageEstruturaXML: TTabSheet
       Caption = 'Estrutura XML'
       ImageIndex = 2
-      ExplicitWidth = 986
-      ExplicitHeight = 378
       object edtEstruturaXML: TSynEdit
         Left = 0
         Top = 0
@@ -162,14 +159,18 @@ object frmEditorXSLT: TfrmEditorXSLT
     object tabPagePreRend: TTabSheet
       Caption = 'Pr'#233' Renderizado'
       ImageIndex = 3
-      ExplicitWidth = 986
-      ExplicitHeight = 378
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
     end
     object tabPageRend: TTabSheet
       Caption = 'Renderizado'
       ImageIndex = 1
-      ExplicitWidth = 986
-      ExplicitHeight = 378
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
     end
   end
   object pnlBottom: TPanel

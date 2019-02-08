@@ -4,8 +4,8 @@ uses
   Forms,
   Principal in 'Principal.pas' {frmEditorXSLT},
   ufrmDialogConfirmReplace in 'ufrmDialogConfirmReplace.pas' {frmDialogConfirmReplace},
-  ufrmDialogSearchText in 'ufrmDialogSearchText.pas' {frmDialogTextSearch},
-  ufrmDialogReplaceText in 'ufrmDialogReplaceText.pas' {frmDialogReplace};
+  ufrmDialogSearchText in 'ufrmDialogSearchText.pas' {TextSearchDialog},
+  ufrmDialogReplaceText in 'ufrmDialogReplaceText.pas' {frmDialogReplaceDialog};
 
 {$R *.res}
 

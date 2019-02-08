@@ -5,8 +5,8 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,Math, Dialogs,
   SynEdit, ExtCtrls, SynHighlighterHtml, SynEditSearch, ComCtrls, SynCompletionProposal,
-  StdCtrls, Buttons, Menus, SynEditRegexSearch, DIXml, SynEditHighlighter, SynEditMiscClasses, OleCtrls, SHDocVw, SynHighlighterXML, xmldom, XMLIntf, msxmldom,
-  XMLDoc;
+  StdCtrls, Buttons, Menus, SynEditRegexSearch, DIXml, SynEditHighlighter, SynEditMiscClasses,
+  OleCtrls, SHDocVw, SynHighlighterXML, xmldom, XMLIntf, msxmldom, XMLDoc;
 
 type
   TfrmEditorXSLT = class(TForm)
@@ -35,7 +35,6 @@ type
     tabPagePreRend: TTabSheet;
     File1: TMenuItem;
     CarregarNovoXML: TMenuItem;
-    openDialogXML: TOpenDialog;
     edtEstruturaXML: TSynEdit;
     synXMLSyn: TSynXMLSyn;
     CarregarNovoTemplate: TMenuItem;
@@ -84,7 +83,7 @@ implementation
 
 {$R *.dfm}
 uses
-  dlgSearchText, dlgReplaceText, dlgConfirmReplace, plgSearchHighlighter,
+  ufrmDialogSearchText, ufrmDialogReplaceText, ufrmDialogConfirmReplace, plgSearchHighlighter,
   SynEditTypes, SynEditMiscProcs;
 
   // options - to be saved to the registry
@@ -168,6 +167,8 @@ begin
    //end else begin
 
    //end;
+
+   Result:= False;
 end;
 
 //Controla a mudança de aba e é responsavel por chamar o validar quando a aba
@@ -235,13 +236,14 @@ var
 begin
    openDialogTemplate:= TOpenDialog.Create(Self);
    openDialogTemplate.Filter:=
-      'HTML|*.html|TXT|*.txt';
+      'TXT|*.txt|HTML|*.html|All Files|*.*';
    try
       if openDialogTemplate.Execute = True then begin
          FTemplateLoaded.LoadFromFile(openDialogTemplate.FileName);
 
          edtCodigo.Lines:= FTemplateLoaded;
 
+         FTabActiveError:=0;
          pageGeral.TabIndex:= 0;
          tabPageEditor.Show;
          edtCodigo.SetFocus;
@@ -268,30 +270,33 @@ var
 begin
    openDialogXML:= TOpenDialog.Create(Self);
    openDialogXML.Filter:=
-      'XML|*.xml';
-
-   if openDialogXML.Execute = True then begin
-      FXMLLoaded.FileName:= openDialogXML.FileName;
-      try
+      'XML|*.xml|All Files|*.*';
+   try
+      if openDialogXML.Execute = True then begin
+         FXMLLoaded.FileName:= openDialogXML.FileName;
          try
-            FXMLLoaded.Active:= True;
-            if FXMLLoaded.IsEmptyDoc then begin
-               Application.MessageBox(PCHAR('Este XML está vázio!'+#13#10+'Selecione outro.'), 'Aviso', MB_ICONWARNING+MB_OK);
-            end else begin
-               edtEstruturaXML.Lines := (FXMLLoaded.XML);
-               pageGeral.TabIndex:= 1;
-               tabPageEstruturaXML.Show;
-               edtEstruturaXML.SetFocus;
-               edtEstruturaXML.SelStart:= 0;
+            try
+               FXMLLoaded.Active:= True;
+               if FXMLLoaded.IsEmptyDoc then begin
+                  Application.MessageBox(PCHAR('Este XML está vázio!'+#13#10+'Selecione outro.'), 'Aviso', MB_ICONWARNING+MB_OK);
+               end else begin
+                  edtEstruturaXML.Lines := (FXMLLoaded.XML);
+                  pageGeral.TabIndex:= 1;
+                  tabPageEstruturaXML.Show;
+                  edtEstruturaXML.SetFocus;
+                  edtEstruturaXML.SelStart:= 0;
+               end;
+            except
+               on E : Exception do begin
+                  Application.MessageBox(PCHAR('Este não é um XML válido!'+#13#10+E.Message), 'Aviso', MB_ICONWARNING+MB_OK);
+               end;
             end;
-         except
-            on E : Exception do begin
-               Application.MessageBox(PCHAR('Este não é um XML válido!'+#13#10+E.Message), 'Aviso', MB_ICONWARNING+MB_OK);
-            end;
+         finally
+            FXMLLoaded.Active:= False;
          end;
-      finally
-         FXMLLoaded.Active:= False;
       end;
+   finally
+      openDialogXML.Free;
    end;
 end;
 
@@ -485,7 +490,7 @@ begin
   begin
     MessageBeep(MB_ICONASTERISK);
     if ssoBackwards in Options then
-      AEdtTabSel.BlockEnd := edtCodigo.BlockBegin
+      AEdtTabSel.BlockEnd := AEdtTabSel.BlockBegin
     else
       AEdtTabSel.BlockBegin := AEdtTabSel.BlockEnd;
     AEdtTabSel.CaretXY := AEdtTabSel.BlockBegin;
@@ -502,7 +507,7 @@ var
   dlg: TTextSearchDialog;
 begin
   if AReplace then
-    dlg := TTextReplaceDialog.Create(Self)
+    dlg := TfrmDialogReplaceDialog.Create(Self)
   else
     dlg := TTextSearchDialog.Create(Self);
   with dlg do try

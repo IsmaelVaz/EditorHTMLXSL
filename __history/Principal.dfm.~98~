@@ -22,16 +22,12 @@ object frmEditorXSLT: TfrmEditorXSLT
     Top = 0
     Width = 992
     Height = 368
-    ActivePage = TabSheet1
+    ActivePage = tabPageEstruturaXML
     Align = alClient
     TabOrder = 0
     OnChange = pageGeralChange
-    ExplicitWidth = 994
-    ExplicitHeight = 406
     object tabPageEditor: TTabSheet
       Caption = 'Editor'
-      ExplicitWidth = 986
-      ExplicitHeight = 378
       object Splitter: TSplitter
         Left = 150
         Top = 0
@@ -74,7 +70,6 @@ object frmEditorXSLT: TfrmEditorXSLT
         WordWrapGlyph.Visible = False
         OnSpecialLineColors = edtMiniMapSpecialLineColors
         FontSmoothing = fsmNone
-        ExplicitHeight = 378
       end
       object edtCodigo: TSynEdit
         Left = 155
@@ -103,8 +98,6 @@ object frmEditorXSLT: TfrmEditorXSLT
         OnSpecialLineColors = edtCodigoSpecialLineColors
         OnStatusChange = edtCodigoStatusChange
         FontSmoothing = fsmNone
-        ExplicitWidth = 831
-        ExplicitHeight = 378
         RemovedKeystrokes = <
           item
             Command = ecDeleteLine
@@ -117,11 +110,9 @@ object frmEditorXSLT: TfrmEditorXSLT
           end>
       end
     end
-    object TabSheet1: TTabSheet
+    object tabPageEstruturaXML: TTabSheet
       Caption = 'Estrutura XML'
       ImageIndex = 2
-      ExplicitWidth = 986
-      ExplicitHeight = 378
       object edtEstruturaXML: TSynEdit
         Left = 0
         Top = 0
@@ -146,7 +137,7 @@ object frmEditorXSLT: TfrmEditorXSLT
         Options = [eoAutoIndent, eoHalfPageScroll, eoShowScrollHint, eoTabIndent, eoTabsToSpaces, eoTrimTrailingSpaces]
         WantTabs = True
         OnReplaceText = edtCodigoReplaceText
-        OnSpecialLineColors = edtCodigoSpecialLineColors
+        OnSpecialLineColors = edtEstruturaXMLSpecialLineColors
         OnStatusChange = edtCodigoStatusChange
         FontSmoothing = fsmNone
         RemovedKeystrokes = <
@@ -161,17 +152,13 @@ object frmEditorXSLT: TfrmEditorXSLT
           end>
       end
     end
-    object TabSheet2: TTabSheet
+    object tabPagePreRend: TTabSheet
       Caption = 'Pr'#233' Renderizado'
       ImageIndex = 3
-      ExplicitWidth = 986
-      ExplicitHeight = 378
     end
     object tabPageRend: TTabSheet
-      Caption = 'Renderizador'
+      Caption = 'Renderizado'
       ImageIndex = 1
-      ExplicitWidth = 986
-      ExplicitHeight = 378
     end
   end
   object pnlBottom: TPanel
@@ -310,13 +297,13 @@ object frmEditorXSLT: TfrmEditorXSLT
     Top = 136
     object File1: TMenuItem
       Caption = 'File'
-      object CarregarNovoTemplate1: TMenuItem
+      object CarregarNovoTemplate: TMenuItem
         Caption = 'Carregar Novo Template'
-        OnClick = CarregarNovoTemplate1Click
+        OnClick = CarregarNovoTemplateClick
       end
-      object CarregarXML1: TMenuItem
+      object CarregarNovoXML: TMenuItem
         Caption = 'Carregar Novo XML'
-        OnClick = CarregarXML1Click
+        OnClick = CarregarNovoXMLClick
       end
     end
     object Editar1: TMenuItem
@@ -350,11 +337,6 @@ object frmEditorXSLT: TfrmEditorXSLT
   object synEditRegexSearch: TSynEditRegexSearch
     Left = 260
     Top = 152
-  end
-  object openDialogXML: TOpenDialog
-    Filter = 'XML|*.xml|All Files|*.*'
-    Left = 680
-    Top = 48
   end
   object synXMLSyn: TSynXMLSyn
     Options.AutoDetectEnabled = False

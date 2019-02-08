@@ -5,8 +5,8 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,Math, Dialogs,
   SynEdit, ExtCtrls, SynHighlighterHtml, SynEditSearch, ComCtrls, SynCompletionProposal,
-  StdCtrls, Buttons, Menus, SynEditRegexSearch, DIXml, SynEditHighlighter, SynEditMiscClasses, OleCtrls, SHDocVw, SynHighlighterXML, xmldom, XMLIntf, msxmldom,
-  XMLDoc;
+  StdCtrls, Buttons, Menus, SynEditRegexSearch, DIXml, SynEditHighlighter, SynEditMiscClasses,
+  OleCtrls, SHDocVw, SynHighlighterXML, xmldom, XMLIntf, msxmldom, XMLDoc;
 
 type
   TfrmEditorXSLT = class(TForm)
@@ -35,7 +35,6 @@ type
     tabPagePreRend: TTabSheet;
     File1: TMenuItem;
     CarregarNovoXML: TMenuItem;
-    openDialogXML: TOpenDialog;
     edtEstruturaXML: TSynEdit;
     synXMLSyn: TSynXMLSyn;
     CarregarNovoTemplate: TMenuItem;
@@ -84,7 +83,7 @@ implementation
 
 {$R *.dfm}
 uses
-  dlgSearchText, dlgReplaceText, dlgConfirmReplace, plgSearchHighlighter,
+  dlgSearchText, ufrmDialogReplaceText, dlgConfirmReplace, plgSearchHighlighter,
   SynEditTypes, SynEditMiscProcs;
 
   // options - to be saved to the registry
@@ -168,6 +167,8 @@ begin
    //end else begin
 
    //end;
+
+   Result:= False;
 end;
 
 //Controla a mudança de aba e é responsavel por chamar o validar quando a aba
@@ -235,13 +236,14 @@ var
 begin
    openDialogTemplate:= TOpenDialog.Create(Self);
    openDialogTemplate.Filter:=
-      'HTML|*.html|TXT|*.txt';
+      'TXT|*.txt|HTML|*.html|All Files|*.*';
    try
       if openDialogTemplate.Execute = True then begin
          FTemplateLoaded.LoadFromFile(openDialogTemplate.FileName);
 
          edtCodigo.Lines:= FTemplateLoaded;
 
+         FTabActiveError:=0;
          pageGeral.TabIndex:= 0;
          tabPageEditor.Show;
          edtCodigo.SetFocus;
@@ -268,7 +270,7 @@ var
 begin
    openDialogXML:= TOpenDialog.Create(Self);
    openDialogXML.Filter:=
-      'XML|*.xml';
+      'XML|*.xml|All Files|*.*';
    try
       if openDialogXML.Execute = True then begin
          FXMLLoaded.FileName:= openDialogXML.FileName;

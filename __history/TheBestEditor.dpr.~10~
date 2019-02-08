@@ -2,10 +2,9 @@ program TheBestEditor;
 
 uses
   Forms,
-  Principal in 'Principal.pas' {Form2},
+  Principal in 'Principal.pas' {frmEditorXSLT},
   dlgConfirmReplace in 'dlgConfirmReplace.pas' {ConfirmReplaceDialog},
   dlgSearchText in 'dlgSearchText.pas' {TextSearchDialog},
-  plgSearchHighlighter in 'plgSearchHighlighter.pas',
   dlgReplaceText in 'dlgReplaceText.pas' {TextReplaceDialog};
 
 {$R *.res}
@@ -14,6 +13,5 @@ begin
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
   Application.CreateForm(TfrmEditorXSLT, frmEditorXSLT);
-  Application.CreateForm(TConfirmReplaceDialog, ConfirmReplaceDialog);
   Application.Run;
 end.

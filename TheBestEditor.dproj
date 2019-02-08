@@ -41,14 +41,14 @@
 			<DCCReference Include="Principal.pas">
 				<Form>frmEditorXSLT</Form>
 			</DCCReference>
-			<DCCReference Include="dlgConfirmReplace.pas">
-				<Form>ConfirmReplaceDialog</Form>
+			<DCCReference Include="ufrmDialogConfirmReplace.pas">
+				<Form>frmDialogConfirmReplace</Form>
 			</DCCReference>
-			<DCCReference Include="dlgSearchText.pas">
-				<Form>TextSearchDialog</Form>
+			<DCCReference Include="ufrmDialogSearchText.pas">
+				<Form>frmDialogTextSearch</Form>
 			</DCCReference>
-			<DCCReference Include="dlgReplaceText.pas">
-				<Form>TextReplaceDialog</Form>
+			<DCCReference Include="ufrmDialogReplaceText.pas">
+				<Form>frmDialogReplace</Form>
 			</DCCReference>
 			<BuildConfiguration Include="Base">
 				<Key>Base</Key>

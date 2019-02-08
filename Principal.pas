@@ -83,7 +83,7 @@ implementation
 
 {$R *.dfm}
 uses
-  dlgSearchText, dlgReplaceText, dlgConfirmReplace, plgSearchHighlighter,
+  ufrmDialogSearchText, ufrmDialogReplaceText, ufrmDialogConfirmReplace, plgSearchHighlighter,
   SynEditTypes, SynEditMiscProcs;
 
   // options - to be saved to the registry
@@ -449,11 +449,11 @@ begin
     EditRect.TopLeft := ClientToScreen(EditRect.TopLeft);
     EditRect.BottomRight := ClientToScreen(EditRect.BottomRight);
 
-    if ConfirmReplaceDialog = nil then
-      ConfirmReplaceDialog := TConfirmReplaceDialog.Create(Application);
-    ConfirmReplaceDialog.PrepareShow(EditRect, APos.X, APos.Y,
+    if frmDialogConfirmReplace = nil then
+      frmDialogConfirmReplace := TfrmDialogConfirmReplace.Create(Application);
+    frmDialogConfirmReplace.PrepareShow(EditRect, APos.X, APos.Y,
       APos.Y + edtCodigo.LineHeight, ASearch);
-    case ConfirmReplaceDialog.ShowModal of
+    case frmDialogConfirmReplace.ShowModal of
       mrYes: Action := raReplace;
       mrYesToAll: Action := raReplaceAll;
       mrNo: Action := raSkip;
@@ -490,26 +490,26 @@ begin
   begin
     MessageBeep(MB_ICONASTERISK);
     if ssoBackwards in Options then
-      AEdtTabSel.BlockEnd := edtCodigo.BlockBegin
+      AEdtTabSel.BlockEnd := AEdtTabSel.BlockBegin
     else
       AEdtTabSel.BlockBegin := AEdtTabSel.BlockEnd;
     AEdtTabSel.CaretXY := AEdtTabSel.BlockBegin;
   end;
 
-  if ConfirmReplaceDialog <> nil then
-    ConfirmReplaceDialog.Free;
+  if frmDialogConfirmReplace <> nil then
+    frmDialogConfirmReplace.Free;
 end;
 
 //Responsável por verificar se é um Search ou um Replace e chamar seu
 //respectivo Form e ação
 procedure TfrmEditorXSLT.ShowSearchReplaceDialog(AReplace: Boolean; AEdtTabSel: TSynEdit);
 var
-  dlg: TTextSearchDialog;
+  dlg: TfrmDialogTextSearch;
 begin
   if AReplace then
-    dlg := TTextReplaceDialog.Create(Self)
+    dlg := TfrmDialogReplace.Create(Self)
   else
-    dlg := TTextSearchDialog.Create(Self);
+    dlg := TfrmDialogTextSearch.Create(Self);
   with dlg do try
     // assign search options
     SearchBackwards := gbSearchBackwards;
@@ -527,7 +527,7 @@ begin
         SearchText := AEdtTabSel.GetWordAtRowCol(AEdtTabSel.CaretXY);
     end;
     SearchTextHistory := gsSearchTextHistory;
-    if AReplace then with dlg as TTextReplaceDialog do begin
+    if AReplace then with dlg as TfrmDialogReplace do begin
       ReplaceText := gsReplaceText;
       ReplaceTextHistory := gsReplaceTextHistory;
     end;
@@ -541,7 +541,7 @@ begin
       gbSearchRegex := SearchRegularExpression;
       gsSearchText := SearchText;
       gsSearchTextHistory := SearchTextHistory;
-      if AReplace then with dlg as TTextReplaceDialog do begin
+      if AReplace then with dlg as TfrmDialogReplace do begin
         gsReplaceText := ReplaceText;
         gsReplaceTextHistory := ReplaceTextHistory;
       end;

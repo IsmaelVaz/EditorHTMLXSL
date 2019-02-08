@@ -3,9 +3,9 @@ program TheBestEditor;
 uses
   Forms,
   Principal in 'Principal.pas' {frmEditorXSLT},
-  ufrmDialogConfirmReplace in 'ufrmDialogConfirmReplace.pas' {frmDialogConfirmReplace},
-  ufrmDialogSearchText in 'ufrmDialogSearchText.pas' {frmDialogTextSearch},
-  ufrmDialogReplaceText in 'ufrmDialogReplaceText.pas' {frmDialogReplace};
+  dlgConfirmReplace in 'dlgConfirmReplace.pas' {ConfirmReplaceDialog},
+  dlgSearchText in 'dlgSearchText.pas' {TextSearchDialog},
+  dlgReplaceText in 'dlgReplaceText.pas' {TextReplaceDialog};
 
 {$R *.res}
 
